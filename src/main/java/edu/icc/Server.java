@@ -9,5 +9,7 @@ public class Server {
         saludo.put("Saludo", "Hola Mundo");
 
         System.out.println(saludo.getString("Saludo"));
+
+        System.out.println("Hola, hola");
     }
 }
