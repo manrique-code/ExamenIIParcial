@@ -39,7 +39,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>edu.icc.Server</mainClass>
+                            <mainClass>backend.lib.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
