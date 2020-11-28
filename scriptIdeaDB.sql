@@ -493,4 +493,23 @@ delimiter $$
     end $$
 delimiter ;
 
+# login ---------------------------------------------------------------
+delimiter $$
+	create procedure `sp_login`(
+		in _nombreUsuario varchar(10),
+        in _contra varchar(50)        
+    )
+    begin 
+		select c.IdCuenta
+        from Cuenta c inner join Persona p
+					  on c.IdPersona = p.IdPersona
+        where c.NombreCuenta = _nombreUsuario 
+			  and c.Contra = md5(_contra);
+    end $$
+delimiter ;
+
+select * from Cuenta;
+
+call `sp_login`("srios", "movil1");
+
 -- FIN DML ------------------------------------------------------------

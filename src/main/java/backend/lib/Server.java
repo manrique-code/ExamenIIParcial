@@ -1,6 +1,9 @@
 package backend.lib;
 
 import backend.lib.controllers.ReqRes;
+import backend.lib.modules.DBManager;
+import backend.lib.modules.datos.DMensajes;
+import backend.lib.modules.datos.DUsuario;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -15,6 +18,14 @@ public class Server {
         try{
             HttpServer server = HttpServer.create(new InetSocketAddress(4000), 0);
 
+            // inicializando la conexión con la base de datos.
+            DBManager.inti_db();
+            DUsuario dUsuario = new DUsuario();
+            DMensajes dMensajes = new DMensajes();
+
+            // inicializando la capa de datos que se conecta con la base de datos
+
+
             // response para ver el nombre y la versión de la app
             server.createContext("/", (httpExchange) -> {
                 JSONObject jres = new JSONObject();
@@ -26,23 +37,32 @@ public class Server {
 
             // response para el login
             server.createContext("/login", (httpExchange) -> {
+                JSONObject requestCliente = ReqRes.getRequest(httpExchange);
+                JSONObject respuestaServidor;
+
+                respuestaServidor = dUsuario.loginValidation(requestCliente, DBManager.conn);
+
+                ReqRes.sendResponse(httpExchange, respuestaServidor);
+            });
+
+            // response para la cuenta
+            server.createContext("/cuenta", (httpExchange) -> {
                JSONObject requestCliente = ReqRes.getRequest(httpExchange);
-               JSONObject respuestaServidor = new JSONObject();
-               JSONObject payload = new JSONObject();
+               JSONObject respuestaServidor;
 
-               String usuario = requestCliente.getJSONObject("payload").getString("usuario");
-               String contra = requestCliente.getJSONObject("payload").getString("contraseña");
+               respuestaServidor = dUsuario.obtenerInfoCuenta(requestCliente, DBManager.conn);
 
-                if(usuario.equals("srios") && contra.equals("movil1")){
-                    payload.put("message", "Iniciada la sesión");
-                    respuestaServidor.put("status", "correcto");
-                    respuestaServidor.put("payload", payload);
-                } else {
-                    payload.put("message", "Usuario o contraseña incorrectos");
-                    respuestaServidor.put("status", "incorrecto");
-                    respuestaServidor.put("payload", payload);
-                }
-                ReqRes.sendResponse(httpExchange,respuestaServidor);
+               ReqRes.sendResponse(httpExchange, respuestaServidor);
+            });
+
+            // response para publicar un mensaje
+            server.createContext("/publicar_mensaje", (httpExchange) -> {
+               JSONObject requestCliente = ReqRes.getRequest(httpExchange);
+               JSONObject respuestaServidor;
+
+                respuestaServidor = dMensajes.publicarMensaje(requestCliente, DBManager.conn);
+
+                ReqRes.sendResponse(httpExchange, respuestaServidor);
             });
 
             server.setExecutor(null);

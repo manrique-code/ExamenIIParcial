@@ -1,2 +1,6 @@
+backend\lib\modules\DBManager.class
+backend\lib\modules\querys\Querys.class
+backend\lib\modules\datos\DUsuario.class
 backend\lib\controllers\ReqRes.class
+backend\lib\modules\datos\DMensajes.class
 backend\lib\Server.class
