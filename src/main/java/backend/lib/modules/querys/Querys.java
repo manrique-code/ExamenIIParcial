@@ -14,8 +14,12 @@ public class Querys {
 
         // querys de mensajes
         querys.put("publicarMensaje", "CALL `sp_insertarMensaje`(?, ?, ?);");
+        querys.put("verTodoMensajes", "CALL `sp_verTodosMensajesPorCuenta`(?);");
 
-        //querys de reacciones
+        //querys de tipo de mensajes
+        querys.put("verTipoMensaje", "CALL `sp_verTipoMensajes`();");
 
+        // querys de hora del servidor
+        querys.put("obtenerHoraServidor", "SELECT TIME(NOW());");
     }
 }

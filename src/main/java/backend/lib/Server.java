@@ -23,9 +23,6 @@ public class Server {
             DUsuario dUsuario = new DUsuario();
             DMensajes dMensajes = new DMensajes();
 
-            // inicializando la capa de datos que se conecta con la base de datos
-
-
             // response para ver el nombre y la versión de la app
             server.createContext("/", (httpExchange) -> {
                 JSONObject jres = new JSONObject();
@@ -63,6 +60,25 @@ public class Server {
                 respuestaServidor = dMensajes.publicarMensaje(requestCliente, DBManager.conn);
 
                 ReqRes.sendResponse(httpExchange, respuestaServidor);
+            });
+
+            // response para ver todos los mensajes
+            server.createContext("/ver_mensajes", (httpExchange) -> {
+               JSONObject requestCliente = ReqRes.getRequest(httpExchange);
+               JSONObject respuestaServidor;
+
+               respuestaServidor = dMensajes.verMensajes(requestCliente, DBManager.conn);
+
+               ReqRes.sendResponse(httpExchange, respuestaServidor);
+            });
+
+            // response para ver todos los tipos de mensaje
+            server.createContext("/ver_tipo_mensaje", (httpExchange) -> {
+               JSONObject respuestaServidor;
+
+               respuestaServidor = dMensajes.verTipoMensaje(DBManager.conn);
+
+               ReqRes.sendResponse(httpExchange, respuestaServidor);
             });
 
             server.setExecutor(null);
